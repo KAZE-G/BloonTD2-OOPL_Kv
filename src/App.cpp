@@ -1,8 +1,10 @@
 #include "App.hpp"
+#include "UI/button.hpp"
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
 #include "Util/Logger.hpp"
 #include "Util/Renderer.hpp"
+#include "core/ShapeAnimation.hpp"
 #include "core/shape.hpp"
 #include "entities/bloon.hpp"
 #include "entities/poppers/spike.hpp"
@@ -11,7 +13,6 @@
 #include <cmath>
 #include <glm/fwd.hpp>
 #include <memory>
-#include "core/ShapeAnimation.hpp"
 bool drag_cd = false;
 void App::Start() {
   LOG_TRACE("Start");
@@ -34,8 +35,11 @@ void App::Start() {
   manager->add_tower(dartMonkey3);
   auto dartMonkey4 = std::make_shared<DartMonkey>(Util::PTSDPosition(150, 200));
   manager->add_tower(dartMonkey4);
-  auto pos_shift = Util::PTSDPosition(0, -5).ToVec2() + manager->get_curr_map()->get_path()->getPositionAtPercentage(1).ToVec2();
-  auto spike_at_end = std::make_shared<Manager::end_spike>(Util::PTSDPosition(pos_shift.x, pos_shift.y));
+  auto pos_shift =
+      Util::PTSDPosition(0, -5).ToVec2() +
+      manager->get_curr_map()->get_path()->getPositionAtPercentage(1).ToVec2();
+  auto spike_at_end = std::make_shared<Manager::end_spike>(
+      Util::PTSDPosition(pos_shift.x, pos_shift.y));
   spike_at_end->setLife(10000000);
   manager->add_popper(spike_at_end);
   std::vector<glm::vec2> sizes(20, glm::vec2(30.0f, 30.0f)); // 固定大小
@@ -54,17 +58,17 @@ void App::Start() {
   auto colorAnimObj = std::make_shared<Util::GameObject>();
   colorAnimObj->SetDrawable(colorAnim);
   colorAnimObj->m_Transform.translation = {0, 0};
-  colorAnimObj->SetZIndex(10.0f);  // 設置z-index
-  colorAnimObj->SetVisible(true);  // 確保可見
+  colorAnimObj->SetZIndex(10.0f); // 設置z-index
+  colorAnimObj->SetVisible(true); // 確保可見
   manager->add_object(colorAnimObj);
 }
 
 void App::Update() {
-//   if(manager->get_game_state() == Manager::game_state::over){
-//     exit(-1);
-//   }
-//   else
-// {
+  //   if(manager->get_game_state() == Manager::game_state::over){
+  //     exit(-1);
+  //   }
+  //   else
+  // {
   manager->cleanup_dead_objects();
   if (manager->get_game_state() != Manager::game_state::menu) {
     // 更新遊戲邏輯
@@ -87,7 +91,7 @@ void App::Update() {
     m_CurrentState = State::END;
   }
   manager->wave_check();
-  manager->update();//}
+  manager->update(); //}
 }
 
 void App::End() { // NOLINT(this method will mutate members in the future)

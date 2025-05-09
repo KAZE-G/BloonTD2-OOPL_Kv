@@ -74,40 +74,43 @@ public:
     void pre_kill() override { m_bloon->kill(); }
   };
 
-  //sfx
+  // sfx
   class popimg_class : public Mortal, public Util::GameObject {
-    public:
-      popimg_class()
-          : Util::GameObject(
-                std::make_shared<Util::Image>(RESOURCE_DIR "/bloons/bpop.png"), 15) {
-        sfx->LoadMedia("12.mp3");
-      };
-    
-      std::shared_ptr<Util::GameObject> getobj() {
-        return std::make_shared<Util::GameObject>(*this);
-      }
-      
-      std::shared_ptr<Util::GameObject> pop_n_return_img(const Util::PTSDPosition now) {
-        LOG_INFO("MNGR  : popimg");
-        sfx->Play();
-        this->m_Transform.translation = now.ToVec2();
-        return std::make_shared<Util::GameObject>(*this);
-      };
-      void tick_add(){tick++;}
-      int get_tick(){return tick;}
-
-    private:
-      int tick=0;
-      std::shared_ptr<Util::SFX> sfx =
-          std::make_shared<Util::SFX>(RESOURCE_DIR "/sounds");
+  public:
+    popimg_class()
+        : Util::GameObject(
+              std::make_shared<Util::Image>(RESOURCE_DIR "/bloons/bpop.png"),
+              15) {
+      sfx->LoadMedia("12.mp3");
     };
 
-  class end_spike: public spike{
-    public:
-      end_spike(const Util::PTSDPosition &pos = {0, 0})
-          : spike(pos) {
-        setLife(10000000);
-      }
+    std::shared_ptr<Util::GameObject> getobj() {
+      return std::make_shared<Util::GameObject>(*this);
+    }
+
+    std::shared_ptr<Util::GameObject>
+    pop_n_return_img(const Util::PTSDPosition now) {
+      LOG_INFO("MNGR  : popimg");
+      if(vol) sfx->Play();
+      this->m_Transform.translation = now.ToVec2();
+      return std::make_shared<Util::GameObject>(*this);
+    };
+    void tick_add() { tick++; }
+    int get_tick() { return tick; }
+    void voltoggle(bool vol) { this->vol = vol; }
+
+  private:
+    bool vol = 1;
+    int tick = 0;
+    std::shared_ptr<Util::SFX> sfx =
+        std::make_shared<Util::SFX>(RESOURCE_DIR "/sounds");
+  };
+
+  class end_spike : public spike {
+  public:
+    end_spike(const Util::PTSDPosition &pos = {0, 0}) : spike(pos) {
+      setLife(10000000);
+    }
   };
 
   // 建構函式和解構函式
@@ -241,7 +244,6 @@ private:
 
   // 初始化塔工廠
   void initTowerFactories();
-
 };
 
 #endif // MANAGER_HPP

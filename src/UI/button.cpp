@@ -6,8 +6,8 @@
 #include <glm/fwd.hpp>
 
 Button::Button(const std::string &name, const Util::PTSDPosition &pos,
-               const std::variant<glm::vec2, float> col_parm = 0.0f,
-               bool can_click = true, const std::string &path = "")
+               const std::variant<glm::vec2, float> col_parm,
+               bool can_click, const std::string &path)
     : Components::CollisionComponent(pos, col_parm),
       Util::GameObject(nullptr, 100, {0, 0}, true) {
   this->name = name;
@@ -21,12 +21,14 @@ Button::Button(const std::string &name, const Util::PTSDPosition &pos,
   image->UseAntiAliasing(false);
   // Set the GameObject transform position - this is the key fix
   m_Transform.translation = pos.ToVec2();
-  if (col_parm.index() == 0)
-    setColParam(static_cast<float>(m_Drawable->GetSize().x / 2));
+  if (col_parm.index() == 1)
+    {setColParam(static_cast<float>(m_Drawable->GetSize().x / 2));
+      LOG_DEBUG("BUTTON: {}:{}", name, m_Drawable->GetSize().x / 2);}
   else {
     const glm::vec2 a = {m_Drawable->GetSize().x, m_Drawable->GetSize().y};
     setColParam(a);
     shape.SetSize(a);
+    LOG_DEBUG("BUTTON: {}:{}", name, a);
   }
 }
 

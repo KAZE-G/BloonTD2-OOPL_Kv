@@ -16,8 +16,8 @@ class Button : public Components::CollisionComponent,
                public Interface::I_clickable {
 public:
   Button(const std::string &name, const Util::PTSDPosition &pos,
-         std::variant<glm::vec2, float> col_parm, bool can_click,
-         const std::string &path);
+         std::variant<glm::vec2, float> col_parm = 0.0f, bool can_click = true,
+         const std::string &path = "");
   ~Button() override = default;
 
 private:
